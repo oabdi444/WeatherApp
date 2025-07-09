@@ -1,12 +1,12 @@
 import streamlit as st
+import pandas as pd
 from utils import get_weather_data, get_forecast_data
 from ml_model import predict_next_temp, recommend_clothing
 
 st.set_page_config(page_title="Weather Forecast with ML", layout="centered")
-
 st.title("🌤️ Weather Forecast + ML Insights")
 
-city = st.text_input("Enter a city:", "London")
+city = st.text_input("Enter a city:", "Cairo")
 units = st.radio("Select unit:", ("Celsius", "Fahrenheit"))
 unit_type = "metric" if units == "Celsius" else "imperial"
 
@@ -31,6 +31,10 @@ if st.button("Get Weather"):
 
         if forecast:
             past_temps = [day["temp"]["day"] for day in forecast[:7]]
+            days = [f"Day {i+1}" for i in range(len(past_temps))]
+            df = pd.DataFrame({"Day": days, "Temperature": past_temps})
+            st.line_chart(df.set_index("Day"))
+
             predicted = predict_next_temp(past_temps)
             clothing = recommend_clothing(predicted)
 
@@ -38,3 +42,4 @@ if st.button("Get Weather"):
             st.write(f"**Clothing Recommendation:** {clothing}")
         else:
             st.warning("Unable to fetch forecast data.")
+

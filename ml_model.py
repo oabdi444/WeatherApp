@@ -1,26 +1,20 @@
-from sklearn.linear_model import LinearRegression
-import numpy as np
-
 def predict_next_temp(temps: list) -> float:
-    if len(temps) < 2:
-        return None
-
-    X = np.array(range(len(temps))).reshape(-1, 1)
-    y = np.array(temps)
-
-    model = LinearRegression()
-    model.fit(X, y)
-
-    next_day = np.array([[len(temps)]])
-    predicted_temp = model.predict(next_day)[0]
-    return round(predicted_temp, 2)
+    """
+    Dummy ML model: Predicts tomorrow's temperature based on the average of the past week.
+    """
+    if not temps:
+        return 0.0
+    return round(sum(temps) / len(temps), 2)
 
 def recommend_clothing(temp: float) -> str:
-    if temp >= 30:
-        return "Wear light clothes like shorts and a t-shirt."
-    elif 20 <= temp < 30:
-        return "A light jacket or long sleeves would be good."
-    elif 10 <= temp < 20:
-        return "Wear a warm sweater or hoodie."
+    """
+    Gives a basic clothing recommendation based on temperature.
+    """
+    if temp < 5:
+        return "Heavy winter clothing recommended."
+    elif temp < 15:
+        return "Wear a jacket or sweater."
+    elif temp < 25:
+        return "Light and comfortable clothing."
     else:
-        return "It's cold—wear a heavy jacket or coat."
+        return "Very hot — wear breathable summer clothes."
